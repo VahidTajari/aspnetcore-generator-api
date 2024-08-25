@@ -3,6 +3,8 @@ version: '3.1'
 services:
     teamcity:
         image: docker.mofid.dev/jetbrains/teamcity-server:2017.1.2
+        container_name: 'tmserver' # name of the container
+        restart: always
         volumes:
           - teamcity-server-datadir:/data/teamcity_server/datadir
           - teamcity-server-logs:/opt/teamcity/logs
@@ -10,10 +12,14 @@ services:
           - 8111:8111
     teamcity-agent: 
         image: docker.mofid.dev/jetbrains/teamcity-agent:2017.1.2
+        container_name: 'tmagent' # name of the container
+        restart: always
         environment: 
            SERVER_URL: http://teamcity:8111
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
+        depends_on:  
+           - teamcity
 
 
 volumes:
